@@ -1,6 +1,15 @@
 <template>
-  <el-button @click="refreshFileTable()">刷新</el-button>
-  <el-button @click="back()">返回上一级目录</el-button>
+  <el-row :gutter="20">
+    <el-button style="margin-left: 10px;" @click="refreshFileTable()">刷新</el-button>
+    <el-button @click="back()">返回上一级目录</el-button>
+    <el-upload
+      style="margin-left: 10px"
+      :show-file-list="false"
+      :http-request="handleUpload"
+    >
+      <el-button>上传</el-button>
+    </el-upload>
+  </el-row>
 
   <el-table :data="fileTableData" @cell-dblclick="handleCellDoubleClick">
     <el-table-column type="selection" width="55" />
@@ -46,6 +55,30 @@ export default {
     back() {
       this.filePathArr.pop()
       this.refreshFileTable()
+    },
+    handleUpload(options) {
+      let formData = new FormData()
+      formData.append("multipartFile", options.file)
+
+      axios
+        .post("/api/file/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          params: {
+            filePath: "/" + this.filePathArr.join("/"),
+            overwriteFlag: false,
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          if (res.data.statusCode === 20000) {
+            this.refreshFileTable()
+            this.$message.success("上传成功")
+          } else {
+            this.$message.error(res.data.statusMessage)
+          }
+        })
     },
   },
   mounted() {
