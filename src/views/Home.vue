@@ -6,12 +6,13 @@
       style="margin-left: 10px"
       :show-file-list="false"
       :http-request="handleUpload"
+      multiple
     >
       <el-button>上传</el-button>
     </el-upload>
   </el-row>
 
-  <el-table :data="fileTableData" @cell-dblclick="handleCellDoubleClick">
+  <el-table :data="fileTableData" @cell-dblclick="handleCellDoubleClick" stripe>
     <el-table-column type="selection" width="55" />
     <el-table-column prop="fileName" label="文件名" min-width="80%" />
     <el-table-column
