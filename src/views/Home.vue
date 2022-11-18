@@ -2,24 +2,17 @@
   <el-row :gutter="20">
     <el-button style="margin-left: 10px;" @click="refreshFileTable()">刷新</el-button>
     <el-button @click="back()">返回上一级目录</el-button>
-    <el-upload
-      style="margin-left: 10px"
-      :show-file-list="false"
-      :http-request="handleUpload"
-      multiple
-    >
+    <el-upload style="margin-left: 10px" :show-file-list="false" :http-request="handleUpload" multiple>
       <el-button>上传</el-button>
     </el-upload>
+    <el-button style="margin-left: 10px;" @click="handleDownload" @selection-change="handleSelectionChange">下载
+    </el-button>
   </el-row>
 
   <el-table :data="fileTableData" @cell-dblclick="handleCellDoubleClick" stripe>
     <el-table-column type="selection" width="55" />
     <el-table-column prop="fileName" label="文件名" min-width="80%" />
-    <el-table-column
-      prop="lastModifiedTime"
-      label="上次修改时间"
-      min-width="20%"
-    />
+    <el-table-column prop="lastModifiedTime" label="上次修改时间" min-width="20%" />
     <el-table-column prop="fileSize" label="文件大小" min-width="20%" />
   </el-table>
 </template>
@@ -81,6 +74,18 @@ export default {
           }
         })
     },
+    handleSelectionChange(){
+
+    },
+    handleDownload(){
+      axios.get("/api/file/download",{
+        params:{
+          filePath: "/test.txt"
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    },
   },
   mounted() {
     this.refreshFileTable()
@@ -88,4 +93,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>
